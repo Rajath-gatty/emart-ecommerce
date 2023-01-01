@@ -15,20 +15,11 @@ const Navbar = ({search=true}) => {
     const isAuth = useSelector(state => state.user.isAuth);
     const username = useSelector(state => state.user.info.username);
 
-    let isInitial;
     useEffect(() => {
-        let fetchProducts;
-        if(isInitial===undefined) {
-            isInitial=true;
-        }
-        if(!isInitial) {
-            fetchProducts = setTimeout(() => {
-             let q=query;
-             dispatch(fetchProductsBySearch(q.trim()));
-            },800);
-        }
-        isInitial=false;
-
+             const fetchProducts = setTimeout(() => {
+                 let q=query;
+                 dispatch(fetchProductsBySearch(q.trim()));
+                },800);
            return () => clearTimeout(fetchProducts)
     },[query])
 

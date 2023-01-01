@@ -15,7 +15,7 @@ import { productReducer } from "../store/ProductsSlice";
 
   return (
     <div className="flex items-center gap-8 p-4 w-full border-b last:border-b-0">
-    <img src={`http://localhost:1337${item.img}`} className="w-32 object-contain" alt="" />
+    <img src={`${import.meta.env.VITE_BASE_URL}${item.img}`} className="w-32 object-contain" alt="" />
     <div className="flex flex-col w-full">
         <div className="flex justify-between">
             <div>

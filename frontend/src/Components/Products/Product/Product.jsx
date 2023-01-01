@@ -5,7 +5,7 @@ const Product = ({id,title,stockLeft,price,img,ratings,rowFilter,description}) =
     return (
         <Link to={`/product/${id}`} replace>
             <div className={`bg-light-grey border ${rowFilter?'flex gap-24 items-center':''} border-grey w-full rounded-lg p-4 h-full`}>
-           <img className={`w-[240px] ${rowFilter?'h-full':'h-40'} mb-5 object-contain`} src={`http://localhost:1337${img}`} alt="img" />
+           <img className={`w-[240px] ${rowFilter?'h-full':'h-40'} mb-5 object-contain`} src={`${import.meta.env.VITE_BASE_URL}${img}`} alt="img" />
            <div>
                 <span className="font-medium text-xl text-gray-700">{title.substring(0,40)}</span>
                 {title.length>40&&<span>....</span>}
