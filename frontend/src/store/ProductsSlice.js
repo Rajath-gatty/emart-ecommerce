@@ -4,22 +4,22 @@ import axios from "axios";
 export const fetchProducts = createAsyncThunk('products/fetchProducts',async ({category,limit}) => {
     let url;
     if(category) {
-        url = `http://localhost:1337/api/products?filters[category][$eq]=${category}&pagination[limit]=${limit}&populate=image`;
+        url = `${import.meta.env.VITE_BASE_URL}/api/products?filters[category][$eq]=${category}&pagination[limit]=${limit}&populate=image`;
     } else {
-        url = `http://localhost:1337/api/products?pagination[limit]=${limit}&populate=image`;
+        url = `${import.meta.env.VITE_BASE_URL}/api/products?pagination[limit]=${limit}&populate=image`;
     }
         const response = await axios.get(url);
         return response.data;
 })
 
 export const fetchProductsById = createAsyncThunk('products/fetchProducts/id',async (id) => {
-    const response = await axios.get(`http://localhost:1337/api/products/${id}?populate=image`);
+    const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/products/${id}?populate=image`);
     return response.data;
 })
 
 export const fetchProductsBySearch = createAsyncThunk('products/fetchProductsBySearch',async (query) => {
     console.log(query);
-    const response = await axios.get(`http://localhost:1337/api/products/?filters[title][$containsi]=${query}&populate=image`);
+    const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/products/?filters[title][$containsi]=${query}&populate=image`);
     return response.data;
 })
 

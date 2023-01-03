@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export const googleAuthData = createAsyncThunk('/auth/google',async (search) => {
-    const response = await axios.get(`http://localhost:1337/api/auth/google/callback/${search}`)
+    const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/auth/google/callback/${search}`)
     return response.data;
 })
 
