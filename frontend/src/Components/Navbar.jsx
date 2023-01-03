@@ -24,10 +24,10 @@ const Navbar = ({search=true}) => {
     },[query])
 
     return (
-        <div className="flex p-4  justify-between max-w-7xl mx-auto">
+        <div className="grid grid-cols-3 p-4  max-w-7xl mx-auto">
             <Link to="/"><img className="w-28" src={Logo} alt="Logo" /></Link>
             <Search search={search} searchQuery={setQuery}/>
-            <div className="flex items-center gap-12">
+            <div className="flex items-center xs:mb-4 lg:mb-0 gap-12 col-start-3 col-end-4 justify-self-end">
                 <div className={`nav-cart-info`}>
                     {cartItemCount>0&&<div className="pt-[1px] text-sm text-center w-[22px] h-[22px] bg-primary text-white font-open font-bold rounded-full absolute top-[-8px] right-[-8px]">{cartItemCount}</div>}
                     <Link to="/cart"><img className="w-7" src={Cart} alt="cart" /></Link>

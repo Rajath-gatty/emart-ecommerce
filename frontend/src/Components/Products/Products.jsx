@@ -17,7 +17,7 @@ const Products = ({category='',limit,rowFilter}) => {
     },[category])
 
     return (
-        <div className={`grid ${rowFilter?'grid-cols-1':'grid-cols-4'} gap-4 mt-4 mx-auto`}>
+        <div className={`grid ${rowFilter?'grid-cols-1':'sm:grid-cols-2 lg:grid-cols-4'} gap-4 mt-4 mx-auto p-3`}>
             {loading?<Skeleton count={8}/>
             :products.map(prod =>{
                 return <Product 

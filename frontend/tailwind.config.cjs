@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+const defaultTheme = require('tailwindcss/defaultTheme')
 module.exports = {
   content: ["./src/**/*.{html,js,jsx}"],
   theme: {
@@ -13,6 +14,10 @@ module.exports = {
         'grey':"#dedede"
       }
     },
+    screens: {
+      'xs':'300px',
+      ...defaultTheme.screens,
+    }
   },
   plugins: [],
 }
