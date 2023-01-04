@@ -20,4 +20,4 @@ steps:
     npm run build
     rsync -a public/ /data/public/ && npm start
   displayName: 'npm install and build'
-  workingDirectory: /backend
+  workingDirectory: backend
