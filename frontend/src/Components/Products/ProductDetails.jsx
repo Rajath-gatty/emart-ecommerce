@@ -43,7 +43,7 @@ const ProductDetails = () => {
                     <span className="ml-2 font-open">{title}</span>
                 </div>
                 <div className="flex gap-4 mt-6">
-                    <img className="flex-1 p-8" src={`${import.meta.env.VITE_BASE_URL}${image.data.attributes.url}`} alt="Asus" />
+                    <img className="flex-1 p-8" src={`${image.data.attributes.url}`} alt="Asus" />
                     <div className="mt-8">
                         <h1 className="font-medium text-gray-700 text-4xl">{title}</h1>
                         <div className="flex items-center justify-between max-w-lg mt-6 mb-1">
