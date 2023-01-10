@@ -1,5 +1,5 @@
 import Product from "./Product/Product";
-import { useEffect } from "react";
+import { useEffect,useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {fetchProducts} from "../../store/ProductsSlice";
 import Skeleton from "../UI/Skeleton/Skeleton";
@@ -9,11 +9,7 @@ const Products = ({category='',limit,rowFilter}) => {
     const {data:products, loading, error} = useSelector(state => state.product.product);
 
     useEffect(() => {
-        if(category) {
             dispatch(fetchProducts({category,limit}))
-        } else {
-            dispatch(fetchProducts({category,limit}))
-        }
     },[category])
 
     return (

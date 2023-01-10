@@ -5,17 +5,13 @@ import Navbar from "../Components/Navbar";
 import Products from "../Components/Products/Products";
 
 const Home = () => {
-    const [category,setCategory] = useState('');
     const [rowFilter,setRowFilter] = useState(false);
     const [rect,setRect] = useState(0);
 
     const filterRef = useRef();
     const location = useLocation();
 
-    useEffect(() => {
-       const res = location.search.split('=')[1];
-        setCategory(res);
-    },[location.search])
+    const category = location.search.split('=')[1];
 
     useLayoutEffect(() => {
        const rect = filterRef.current.getBoundingClientRect()
@@ -25,7 +21,7 @@ const Home = () => {
 
     return (
         <>
-            <Navbar/>
+            <Navbar category={category}/>
             <div className="max-w-6xl mx-auto relative">
                 <div className="flex justify-between items-center border-b mt-8 border-gray-200">
                 <h1 className="font-bold font-open m-0 text-3xl text-dark-grey mb-4 -z-10">{category?`Showing Products for "${category}"`:'Products'}</h1>

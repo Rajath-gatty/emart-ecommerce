@@ -3,14 +3,15 @@ import Search from "./Search";
 import Cart from "../assets/icons/cart.svg";
 import Profile from "../assets/icons/profile.svg";
 import { Link } from "react-router-dom";
-import { useState,useEffect } from "react";
+import { useState,useEffect,useRef } from "react";
 import { useSelector,useDispatch } from "react-redux";
 import { fetchProductsBySearch } from "../store/ProductsSlice";
 
-const Navbar = ({search=true}) => {
+const Navbar = ({search=true,category}) => {
     const [query,setQuery] = useState('');
 
     const dispatch = useDispatch();
+    let isMounted = useRef(false);
     const cartItemCount = useSelector(state => state.product.cart.itemCount);
     const isAuth = useSelector(state => state.user.isAuth);
     const username = useSelector(state => state.user.info.username);
@@ -18,7 +19,12 @@ const Navbar = ({search=true}) => {
     useEffect(() => {
              const fetchProducts = setTimeout(() => {
                  let q=query;
-                 dispatch(fetchProductsBySearch(q.trim()));
+                 console.log(category)
+                 if((isMounted&&!category)) {
+                     dispatch(fetchProductsBySearch(q.trim()));
+                 } else {
+                    isMounted = true;
+                 }
                 },800);
            return () => clearTimeout(fetchProducts)
     },[query])
@@ -26,9 +32,9 @@ const Navbar = ({search=true}) => {
     return (
         <div className="grid grid-cols-3 p-4  max-w-7xl mx-auto">
             <Link to="/"><img className="w-28" src={Logo} alt="Logo" /></Link>
-            <Search search={search} searchQuery={setQuery}/>
+            <Search search={search} category={category} searchQuery={setQuery}/>
             <div className="flex items-center xs:mb-4 lg:mb-0 gap-12 col-start-3 col-end-4 justify-self-end">
-                <div className={`nav-cart-info`}>
+                <div className={`nav-cart-info w-7`}>
                     {cartItemCount>0&&<div className="pt-[1px] text-sm text-center w-[22px] h-[22px] bg-primary text-white font-open font-bold rounded-full absolute top-[-8px] right-[-8px]">{cartItemCount}</div>}
                     <Link to="/cart"><img className="w-7" src={Cart} alt="cart" /></Link>
                 </div>

@@ -36,14 +36,14 @@ const ProductDetails = () => {
     return (
         <div>
             <Navbar search={false}/>
-            {loading?<div>Loading....</div>:<div className="max-w-7xl mx-auto mt-4">
+            {loading?<div className="text-center mt-16">Loading....</div>:<div className="max-w-7xl mx-auto mt-4">
                 <div>
                     <Link className="text-primary mr-2 font-open" to="/">Home</Link> &gt; 
                     <Link className="text-primary mr-2 ml-2 font-open" to={`/?category=${category}`}>{category}</Link> &gt; 
                     <span className="ml-2 font-open">{title}</span>
                 </div>
                 <div className="flex gap-4 mt-6">
-                    <img className="flex-1 p-8" src={`${image.data.attributes.url}`} alt="Asus" />
+                    <img className="flex-1 p-8 max-h-[600px] object-contain" src={`${image.data.attributes.url}`} alt="Asus" />
                     <div className="mt-8">
                         <h1 className="font-medium text-gray-700 text-4xl">{title}</h1>
                         <div className="flex items-center justify-between max-w-lg mt-6 mb-1">
