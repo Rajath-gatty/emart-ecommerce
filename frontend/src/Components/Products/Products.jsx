@@ -1,5 +1,5 @@
 import Product from "./Product/Product";
-import { useEffect,useRef } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {fetchProducts} from "../../store/ProductsSlice";
 import Skeleton from "../UI/Skeleton/Skeleton";
@@ -7,7 +7,7 @@ import Skeleton from "../UI/Skeleton/Skeleton";
 const Products = ({category='',limit,rowFilter}) => {
     const dispatch = useDispatch();
     const {data:products, loading, error} = useSelector(state => state.product.product);
-
+ 
     useEffect(() => {
             dispatch(fetchProducts({category,limit}))
     },[category])
