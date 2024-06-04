@@ -8,12 +8,16 @@ const GoogleAuthCallback = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isAuth = useSelector(state => state.user.isAuth);
+  const token = useSelector(state => state.user.token);
+  const userInfo = useSelector(state => state.user.info)
 
     useEffect(() => {
       dispatch(googleAuthData(location.search))
     },[])
 
     if(isAuth) {
+      localStorage.setItem('token',JSON.stringify(token));
+      localStorage.setItem('user',JSON.stringify(userInfo));
       navigate('/',{replace:true})
     }
 

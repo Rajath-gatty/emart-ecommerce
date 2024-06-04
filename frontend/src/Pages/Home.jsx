@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect,useState,useRef,useLayoutEffect} from "react";
+import { useState,useRef,useLayoutEffect} from "react";
 import { useLocation } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import Products from "../Components/Products/Products";
@@ -12,12 +12,13 @@ const Home = () => {
     const location = useLocation();
 
     const category = location.search.split('=')[1];
+    const test = new URLSearchParams(location.search);
+    console.log(rect);
 
     useLayoutEffect(() => {
        const rect = filterRef.current.getBoundingClientRect()
        setRect(rect.x+(rect.width/2))
     },[])
-
 
     return (
         <>

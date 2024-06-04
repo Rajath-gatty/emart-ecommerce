@@ -18,7 +18,6 @@ export const fetchProductsById = createAsyncThunk('products/fetchProducts/id',as
 })
 
 export const fetchProductsBySearch = createAsyncThunk('products/fetchProductsBySearch',async (query) => {
-    console.log(query);
     const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/products/?filters[title][$containsi]=${query}&populate=image`);
     return response.data;
 })
@@ -40,7 +39,7 @@ const product = createSlice({
             items:[],
             itemCount:0,
             totalPrice:0
-        }
+        },
     },
     reducers:{
         addtoCart(state,action) {
@@ -56,6 +55,7 @@ const product = createSlice({
                 state.cart.items.push(item);
                 state.cart.itemCount++;
                 state.cart.totalPrice = state.cart.totalPrice+product.price;
+                localStorage.setItem('cart',JSON.stringify(state.cart));
         },
         incrementCount(state,action) {
             state.cart.items.forEach((prod,i)=> {
@@ -64,6 +64,7 @@ const product = createSlice({
                         state.cart.itemCount++;
                         state.cart.items[i].quantity++;
                         state.cart.totalPrice = state.cart.totalPrice+prod.price;
+                        localStorage.setItem('cart',JSON.stringify(state.cart));
                     }
                 }
             });
@@ -75,6 +76,7 @@ const product = createSlice({
                         state.cart.itemCount--;
                         state.cart.items[i].quantity--;
                         state.cart.totalPrice = state.cart.totalPrice-prod.price;
+                        localStorage.setItem('cart',JSON.stringify(state.cart));
                     }
                 }
             });
@@ -91,6 +93,10 @@ const product = createSlice({
            state.cart.totalPrice = state.cart.totalPrice-(itemPrice*qty);
            state.cart.itemCount = state.cart.itemCount - qty;
            itemPrice=0;
+           localStorage.setItem('cart',JSON.stringify(state.cart));
+        },
+        loadItemsToCart(state,action) {
+            state.cart = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -103,7 +109,6 @@ const product = createSlice({
         })
         builder.addCase(fetchProducts.rejected,(state,action) => {
             state.product.loading = false;
-            console.log(action.error)
             state.product.error = true;
         })
         builder.addCase(fetchProductsById.pending,(state,action) => {

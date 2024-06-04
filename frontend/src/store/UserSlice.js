@@ -16,6 +16,11 @@ const user = createSlice({
         error:false
     },
     reducers:{
+        loadUserInfo(state,action) {
+            state.info = action.payload.info;
+            state.token = action.payload.token;
+            state.isAuth = true;
+        }
     },
     extraReducers: {
         [googleAuthData.pending]: (state) => {
@@ -33,5 +38,7 @@ const user = createSlice({
         }
     }
 })
+
+export const userReducer = user.actions;
 
 export default user;
