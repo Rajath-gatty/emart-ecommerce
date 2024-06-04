@@ -3,11 +3,41 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import CartItem from "../Components/CartItem";
 import OrderItem from "../Components/OrderItem";
+import axios from "axios";
 
 const Cart = () => {
     const dispatch = useDispatch();
     const cartItems = useSelector(state => state.product.cart.items);
     const totalPrice = useSelector(state => state.product.cart.totalPrice);
+    const isAuth = useSelector(state => state.user.isAuth);
+
+    const handleCheckout = async() => { 
+        try {
+            console.log(cartItems);
+            const res = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/checkout`,
+                {
+                    items: cartItems.map(item => {
+                        return {
+                            id: item.id,
+                            qty: item.quantity
+                        }
+                    })
+                })
+            window.location.href=res.data.url;
+
+        } catch(err) {
+            console.log(err);
+        }
+     }
+
+     let checkoutBtn;
+     
+
+     if(isAuth) {
+        checkoutBtn = <button className="bg-gray-800 text-white rounded font-medium w-full p-4 mt-8" onClick={handleCheckout}>PAY NOW</button>
+     } else {
+        checkoutBtn = <button className="bg-gray-800 text-white rounded font-medium w-full p-4 mt-8" onClick={() => window.location = `${import.meta.env.VITE_BASE_URL}/api/connect/google`}>LOGIN TO PAY</button>
+     }
 
     return (
         <>
@@ -35,16 +65,12 @@ const Cart = () => {
                                         <td className="text-md font-medium">&#8377; {totalPrice.toLocaleString('en-IN')}</td>
                                     </tr>
                                     <tr>
-                                        <td className="text-xs font-open text-gray-500">GST(18%)</td>
-                                        <td>&#8377; {((totalPrice/100)*18).toLocaleString('en-IN')}</td>
-                                    </tr>
-                                    <tr>
                                         <td className="pt-3"><h1 className="text-2xl font-bold font-open text-gray-800">Total</h1></td>
-                                        <td className="font-bold text-2xl text-gray-800">&#8377; {(totalPrice+(totalPrice/100)*18).toLocaleString('en-IN')}</td>
+                                        <td className="font-bold text-2xl text-gray-800">&#8377; {(totalPrice).toLocaleString('en-IN')}</td>
                                     </tr>
                                 </tbody>
                             </table>
-                            <button className="bg-gray-800 text-white rounded font-medium w-full p-4 mt-8">PAY NOW</button>
+                            {checkoutBtn}
                         </div>
                     </div>
                 </div>:<div className="flex flex-col justify-center h-[50vh] items-center">

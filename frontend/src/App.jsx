@@ -5,8 +5,27 @@ import ProductDetails from './Components/Products/ProductDetails';
 import Cart from './Pages/Cart';
 import GoogleAuthCallback from './Pages/GoogleAuthCallback';
 import Login from './Pages/Login';
+import { useDispatch } from 'react-redux';
+import { userReducer } from './store/UserSlice';
+import { productReducer } from './store/ProductsSlice';
+import axios from 'axios';
+import { useLayoutEffect} from 'react';                    
 
 function App() {
+  const dispatch = useDispatch();
+
+  useLayoutEffect(() => {
+    const token = JSON.parse(localStorage.getItem('token'));
+    const cartItems = JSON.parse(localStorage.getItem('cart'));
+    if(cartItems) {
+      dispatch(productReducer.loadItemsToCart(cartItems));
+    }
+    if(token) {
+      const userInfo = JSON.parse(localStorage.getItem('user'));
+      dispatch(userReducer.loadUserInfo({token,info:userInfo}));
+      axios.defaults.headers['Authorization'] = `Bearer ${token}`;
+    }
+  },[])
 
   return (
     <div className="App">

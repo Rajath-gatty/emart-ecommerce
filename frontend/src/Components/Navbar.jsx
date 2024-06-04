@@ -33,12 +33,13 @@ const Navbar = ({search=true,category}) => {
         <div className="grid grid-cols-3 p-4  max-w-7xl mx-auto">
             <Link to="/"><img className="w-28" src={Logo} alt="Logo" /></Link>
             <Search search={search} category={category} searchQuery={setQuery}/>
-            <div className="flex items-center xs:mb-4 lg:mb-0 gap-12 col-start-3 col-end-4 justify-self-end">
+            <div className="flex items-center xs:mb-4 lg:mb-0 gap-12 col-start-3 col-end-4 justify-self-end relative">
                 <div className={`nav-cart-info w-7`}>
                     {cartItemCount>0&&<div className="pt-[1px] text-sm text-center w-[22px] h-[22px] bg-primary text-white font-open font-bold rounded-full absolute top-[-8px] right-[-8px]">{cartItemCount}</div>}
                     <Link to="/cart"><img className="w-7" src={Cart} alt="cart" /></Link>
                 </div>
-                {isAuth?<div className="flex gap-4"><h1 className="font-medium text-lg">{username}</h1><img className="w-7" src={Profile} alt="Profile" /></div>:<Link to="/login">
+                {isAuth?<div data-tooltip="Tooltip help here!" data-flow="bottom" className="flex gap-4"><h1 className="font-medium text-lg">{username}</h1><img className="w-7" src={Profile} alt="Profile" />
+                </div>:<Link to="/login">
                     <button className="px-6 py-2 rounded-full bg-primary text-white text-sm">Login</button>
                 </Link>}
             </div>

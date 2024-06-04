@@ -5,6 +5,6 @@ module.exports = ({ env }) => ({
   app: {
     keys: env.array('APP_KEYS'),
   },
-  url: env('', 'https://emart-ecommerce-9m65.onrender.com')
+  url: env('SERVER_URL')
 });
 
