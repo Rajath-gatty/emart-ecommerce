@@ -1,31 +1,36 @@
-import { useEffect } from "react"
-import { useDispatch,useSelector } from "react-redux";
-import { useLocation,useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { unwrapResult } from "@reduxjs/toolkit";
 import { googleAuthData } from "../store/UserSlice";
 
 const GoogleAuthCallback = () => {
-  const dispatch = useDispatch();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const isAuth = useSelector(state => state.user.isAuth);
-  const token = useSelector(state => state.user.token);
-  const userInfo = useSelector(state => state.user.info)
+    const dispatch = useDispatch();
+    const location = useLocation();
+    const navigate = useNavigate();
 
     useEffect(() => {
-      dispatch(googleAuthData(location.search))
-    },[])
+        const authenticate = async () => {
+            try {
+                const resultAction = await dispatch(
+                    googleAuthData(location.search)
+                );
+                // const result = unwrapResult(resultAction);
+                // console.log(result);
+                navigate("/");
+            } catch (err) {
+                console.error("Google Authentication failed", err);
+            }
+        };
 
-    if(isAuth) {
-      localStorage.setItem('token',JSON.stringify(token));
-      localStorage.setItem('user',JSON.stringify(userInfo));
-      navigate('/',{replace:true})
-    }
+        authenticate();
+    }, [location.search]);
 
-  return (
-    <div className="flex justify-center h-screen items-center">
-      <p>Loading...</p>
-    </div>
-  )
-}
+    return (
+        <div className="flex justify-center h-screen items-center">
+            <p>Loading...</p>
+        </div>
+    );
+};
 
 export default GoogleAuthCallback;

@@ -2,49 +2,98 @@ import Logo from "../assets/logo.svg";
 import Search from "./Search";
 import Cart from "../assets/icons/cart.svg";
 import Profile from "../assets/icons/profile.svg";
-import { Link } from "react-router-dom";
-import { useState,useEffect,useRef } from "react";
-import { useSelector,useDispatch } from "react-redux";
-import { fetchProductsBySearch } from "../store/ProductsSlice";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+    fetchProductsBySearch,
+    fetchProducts as fetchAllProducts,
+} from "../store/ProductsSlice";
+import { userReducer } from "../store/UserSlice";
 
-const Navbar = ({search=true,category}) => {
-    const [query,setQuery] = useState('');
+const Navbar = ({ search = true }) => {
+    const [query, setQuery] = useState("");
 
     const dispatch = useDispatch();
-    let isMounted = useRef(false);
-    const cartItemCount = useSelector(state => state.product.cart.itemCount);
-    const isAuth = useSelector(state => state.user.isAuth);
-    const username = useSelector(state => state.user.info.username);
+    const navigate = useNavigate();
+
+    let isMounted = useRef(null);
+    const cartItemCount = useSelector((state) => state.product.cart.itemCount);
+    const isAuth = useSelector((state) => state.user.isAuth);
+    const username = useSelector((state) => state.user.info.username);
+    const filters = useSelector((state) => state.product.filters);
 
     useEffect(() => {
-             const fetchProducts = setTimeout(() => {
-                 let q=query;
-                 console.log(category)
-                 if((isMounted&&!category)) {
-                     dispatch(fetchProductsBySearch(q.trim()));
-                 } else {
-                    isMounted = true;
-                 }
-                },800);
-           return () => clearTimeout(fetchProducts)
-    },[query])
+        const fetchProducts = () => {
+            const q = query;
+            if (q.length > 0) {
+                dispatch(fetchProductsBySearch({ query: q.trim() }));
+            } else {
+                dispatch(fetchAllProducts({ filters }));
+            }
+        };
+        if (isMounted.current) {
+            fetchProducts();
+        } else {
+            isMounted.current = true;
+        }
+    }, [query]);
 
     return (
-        <div className="grid grid-cols-3 p-4  max-w-7xl mx-auto">
-            <Link to="/"><img className="w-28" src={Logo} alt="Logo" /></Link>
-            <Search search={search} category={category} searchQuery={setQuery}/>
-            <div className="flex items-center xs:mb-4 lg:mb-0 gap-12 col-start-3 col-end-4 justify-self-end relative">
+        <div className="grid grid-cols-3 p-4 pt-6 md:pt-4 w-full md:max-w-7xl md:mx-auto">
+            <Link to="/">
+                <img className="w-20 md:w-28" src={Logo} alt="Logo" />
+            </Link>
+            {search && <Search searchQuery={setQuery} />}
+            <div className="flex items-center xs:mb-4 lg:mb-0 md:gap-12 gap-8 col-start-3 col-end-4 justify-self-end relative">
                 <div className={`nav-cart-info w-7`}>
-                    {cartItemCount>0&&<div className="pt-[1px] text-sm text-center w-[22px] h-[22px] bg-primary text-white font-open font-bold rounded-full absolute top-[-8px] right-[-8px]">{cartItemCount}</div>}
-                    <Link to="/cart"><img className="w-7" src={Cart} alt="cart" /></Link>
+                    {cartItemCount > 0 && (
+                        <div className="pt-[1px] text-sm text-center w-[22px] h-[22px] bg-primary text-white font-open font-bold rounded-full absolute top-[-8px] right-[-8px]">
+                            {cartItemCount}
+                        </div>
+                    )}
+                    <Link to="/cart">
+                        <img className="w-7" src={Cart} alt="cart" />
+                    </Link>
                 </div>
-                {isAuth?<div data-tooltip="Tooltip help here!" data-flow="bottom" className="flex gap-4"><h1 className="font-medium text-lg">{username}</h1><img className="w-7" src={Profile} alt="Profile" />
-                </div>:<Link to="/login">
-                    <button className="px-6 py-2 rounded-full bg-primary text-white text-sm">Login</button>
-                </Link>}
+                {isAuth ? (
+                    <div className="flex md:gap-4 gap-2 relative group cursor-pointer">
+                        <h1 className="font-medium text-lg">{username}</h1>
+                        <img
+                            className="mr-6 md:mr-0 w-7"
+                            src={Profile}
+                            alt="Profile"
+                        />
+                        <div className="pt-4 cursor-pointer group-hover:visible invisible w-[150px] absolute top-5 right-1 bg-transparent transition-all duration-75 opacity-0 group-hover:opacity-100 transform scale-50 group-hover:scale-100 origin-top">
+                            <div className="shadow-md rounded-md bg-white">
+                                <Link to="/orders">
+                                    <p className="text-center p-3 hover:bg-slate-50 text-slate-600 ">
+                                        Orders
+                                    </p>
+                                </Link>
+                                <hr className="mx-2 opacity-70" />
+                                <p
+                                    className="text-red-500 hover:bg-slate-50 text-center p-3"
+                                    onClick={() => {
+                                        dispatch(userReducer.logoutUser());
+                                        navigate("/", { replace: true });
+                                    }}
+                                >
+                                    Logout
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <Link to="/login">
+                        <button className="px-6 py-2 rounded-full bg-primary text-white text-sm">
+                            Login
+                        </button>
+                    </Link>
+                )}
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Navbar;
