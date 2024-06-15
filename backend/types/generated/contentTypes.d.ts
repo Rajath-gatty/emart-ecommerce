@@ -371,19 +371,24 @@ export interface ApiOrderOrder extends Schema.CollectionType {
     description: '';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
-    orderId: Attribute.UID;
     totalAmount: Attribute.Integer;
-    transactionNo: Attribute.String;
-    products: Attribute.JSON;
-    status: Attribute.Enumeration<['Delivered', 'Not Delivered', 'canceled']>;
-    date: Attribute.DateTime;
-    email: Attribute.Email;
+    status: Attribute.Enumeration<
+      ['Delivered', 'Not Delivered', 'canceled', 'processing']
+    >;
+    product: Attribute.JSON;
+    address: Attribute.JSON;
+    userId: Attribute.Relation<
+      'api::order.order',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    qty: Attribute.Integer;
+    paymentId: Attribute.String & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
       'api::order.order',
       'oneToOne',
@@ -853,6 +858,11 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'plugin::users-permissions.user',
       'manyToOne',
       'plugin::users-permissions.role'
+    >;
+    orderId: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::order.order'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
