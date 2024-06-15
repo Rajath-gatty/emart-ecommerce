@@ -13,7 +13,6 @@ export const fetchProducts = createAsyncThunk(
         let url;
         if (isApplied) {
             if (category.length > 0 && priceRange.length > 0) {
-                console.log("Filter block");
                 const categoryStr = category
                     .map((c, i) => `filters[category][$in][${i}]=${c}`)
                     .join("&");
@@ -25,7 +24,6 @@ export const fetchProducts = createAsyncThunk(
                     priceRange[1]
                 }&pagination[limit]=${limit}&populate=image`;
             } else if (category.length > 0) {
-                console.log("Category block");
                 const categoryStr = category
                     .map((c, i) => `filters[category][$in][${i}]=${c}`)
                     .join("&");
@@ -33,7 +31,6 @@ export const fetchProducts = createAsyncThunk(
                     import.meta.env.VITE_BASE_URL
                 }/api/products?${categoryStr}&pagination[limit]=${limit}&populate=image`;
             } else if (priceRange.length > 0) {
-                console.log("Price range block");
                 url = `${
                     import.meta.env.VITE_BASE_URL
                 }/api/products?filters[price][$gt]=${
@@ -41,16 +38,12 @@ export const fetchProducts = createAsyncThunk(
                 }&filters[price][$lt]=${
                     priceRange[1]
                 }&pagination[limit]=${limit}&populate=image`;
-                console.log(url);
             }
         } else {
-            console.log("Genereic block");
             url = `${
                 import.meta.env.VITE_BASE_URL
             }/api/products?pagination[limit]=${limit}&populate=image`;
         }
-        console.log(category, priceRange);
-        console.log(url);
         const response = await axios.get(url);
         return response.data;
     }
@@ -219,10 +212,6 @@ const product = createSlice({
             } else {
                 state.filters.isApplied = false;
             }
-            console.log(
-                action.payload.priceRange[0] > 1000,
-                action.payload.priceRange[1] < 100000
-            );
             state.filters.filter.priceRange = action.payload.priceRange;
             localStorage.setItem(
                 "filters",
