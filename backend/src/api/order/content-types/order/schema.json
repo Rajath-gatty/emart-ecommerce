@@ -8,35 +8,40 @@
     "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
-    "orderId": {
-      "type": "uid"
-    },
     "totalAmount": {
       "type": "integer"
-    },
-    "transactionNo": {
-      "type": "string"
-    },
-    "products": {
-      "type": "json"
     },
     "status": {
       "type": "enumeration",
       "enum": [
         "Delivered",
         "Not Delivered",
-        "canceled"
+        "canceled",
+        "processing"
       ]
     },
-    "date": {
-      "type": "datetime"
+    "product": {
+      "type": "json"
     },
-    "email": {
-      "type": "email"
+    "address": {
+      "type": "json"
+    },
+    "userId": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "orderId"
+    },
+    "qty": {
+      "type": "integer"
+    },
+    "paymentId": {
+      "type": "string",
+      "required": true
     }
   }
 }
