@@ -1,35 +1,112 @@
 import Product from "./Product/Product";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {fetchProducts} from "../../store/ProductsSlice";
+import { fetchProducts, productReducer } from "../../store/ProductsSlice";
 import Skeleton from "../UI/Skeleton/Skeleton";
+import { Filter } from "../UI/Filter";
 
-const Products = ({category='',limit,rowFilter}) => {
+const Products = () => {
+    const [rowFilter, setRowFilter] = useState(false);
+
     const dispatch = useDispatch();
-    const {data:products, loading, error} = useSelector(state => state.product.product);
- 
+    const filterRef = useRef();
+    const fetchProductsRef = useRef(null);
+
+    const {
+        data: products,
+        loading,
+        error,
+    } = useSelector((state) => state.product.product);
+    const filters = useSelector((state) => state.product.filters);
+
     useEffect(() => {
-            dispatch(fetchProducts({category,limit}))
-    },[category])
+        if (!JSON.parse(localStorage.getItem("filters"))?.isApplied) {
+            dispatch(fetchProducts({ filters, limit: 12 }));
+        }
+    }, []);
+
+    useEffect(() => {
+        if (fetchProductsRef.current) {
+            dispatch(fetchProducts({ filters, limit: 12 }));
+        } else {
+            fetchProductsRef.current = true;
+        }
+    }, [filters]);
 
     return (
-        <div className={`grid ${rowFilter?'grid-cols-1':'sm:grid-cols-2 lg:grid-cols-4'} gap-4 mt-4 mx-auto p-3`}>
-            {loading?<Skeleton count={8}/>
-            :products.map(prod =>{
-                return <Product 
-                rowFilter={rowFilter}
-                key={prod.id} 
-                id={prod.id} 
-                title={prod.attributes.title} 
-                stockLeft={prod.attributes.stockLeft} 
-                price={prod.attributes.price}
-                img={prod.attributes.image.data.attributes.url}
-                ratings={prod.attributes.ratings}
-                description={prod.attributes.description}
-                />})
-            }
+        <div>
+            <div className="flex justify-between mx-2 lg:mx-0  items-center border-b mt-4 lg:mt-8 border-gray-200">
+                <h1 className="font-bold font-open m-0 text-2xl text-dark-grey mb-4">
+                    Products
+                </h1>
+                <div className="flex items-center  justify-center gap-6 mr-2">
+                    <div className="relative group">
+                        <svg
+                            width="24"
+                            ref={filterRef}
+                            viewBox="0 0 34 34"
+                            fill="none"
+                            className="cursor-pointer"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                d="M8.66659 6.99992H6.99992V1.99992C6.99992 1.55789 6.82432 1.13397 6.51176 0.821407C6.1992 0.508847 5.77528 0.333252 5.33325 0.333252C4.89122 0.333252 4.4673 0.508847 4.15474 0.821407C3.84218 1.13397 3.66659 1.55789 3.66659 1.99992V6.99992H1.99992C1.55789 6.99992 1.13397 7.17551 0.821407 7.48807C0.508847 7.80064 0.333252 8.22456 0.333252 8.66659C0.333252 9.10861 0.508847 9.53254 0.821407 9.8451C1.13397 10.1577 1.55789 10.3333 1.99992 10.3333H8.66659C9.10861 10.3333 9.53254 10.1577 9.8451 9.8451C10.1577 9.53254 10.3333 9.10861 10.3333 8.66659C10.3333 8.22456 10.1577 7.80064 9.8451 7.48807C9.53254 7.17551 9.10861 6.99992 8.66659 6.99992ZM5.33325 13.6666C4.89122 13.6666 4.4673 13.8422 4.15474 14.1547C3.84218 14.4673 3.66659 14.8912 3.66659 15.3333V31.9999C3.66659 32.4419 3.84218 32.8659 4.15474 33.1784C4.4673 33.491 4.89122 33.6666 5.33325 33.6666C5.77528 33.6666 6.1992 33.491 6.51176 33.1784C6.82432 32.8659 6.99992 32.4419 6.99992 31.9999V15.3333C6.99992 14.8912 6.82432 14.4673 6.51176 14.1547C6.1992 13.8422 5.77528 13.6666 5.33325 13.6666ZM16.9999 26.9999C16.5579 26.9999 16.134 27.1755 15.8214 27.4881C15.5088 27.8006 15.3333 28.2246 15.3333 28.6666V31.9999C15.3333 32.4419 15.5088 32.8659 15.8214 33.1784C16.134 33.491 16.5579 33.6666 16.9999 33.6666C17.4419 33.6666 17.8659 33.491 18.1784 33.1784C18.491 32.8659 18.6666 32.4419 18.6666 31.9999V28.6666C18.6666 28.2246 18.491 27.8006 18.1784 27.4881C17.8659 27.1755 17.4419 26.9999 16.9999 26.9999ZM31.9999 13.6666H30.3333V1.99992C30.3333 1.55789 30.1577 1.13397 29.8451 0.821407C29.5325 0.508847 29.1086 0.333252 28.6666 0.333252C28.2246 0.333252 27.8006 0.508847 27.4881 0.821407C27.1755 1.13397 26.9999 1.55789 26.9999 1.99992V13.6666H25.3333C24.8912 13.6666 24.4673 13.8422 24.1547 14.1547C23.8422 14.4673 23.6666 14.8912 23.6666 15.3333C23.6666 15.7753 23.8422 16.1992 24.1547 16.5118C24.4673 16.8243 24.8912 16.9999 25.3333 16.9999H31.9999C32.4419 16.9999 32.8659 16.8243 33.1784 16.5118C33.491 16.1992 33.6666 15.7753 33.6666 15.3333C33.6666 14.8912 33.491 14.4673 33.1784 14.1547C32.8659 13.8422 32.4419 13.6666 31.9999 13.6666ZM28.6666 20.3333C28.2246 20.3333 27.8006 20.5088 27.4881 20.8214C27.1755 21.134 26.9999 21.5579 26.9999 21.9999V31.9999C26.9999 32.4419 27.1755 32.8659 27.4881 33.1784C27.8006 33.491 28.2246 33.6666 28.6666 33.6666C29.1086 33.6666 29.5325 33.491 29.8451 33.1784C30.1577 32.8659 30.3333 32.4419 30.3333 31.9999V21.9999C30.3333 21.5579 30.1577 21.134 29.8451 20.8214C29.5325 20.5088 29.1086 20.3333 28.6666 20.3333ZM20.3333 20.3333H18.6666V1.99992C18.6666 1.55789 18.491 1.13397 18.1784 0.821407C17.8659 0.508847 17.4419 0.333252 16.9999 0.333252C16.5579 0.333252 16.134 0.508847 15.8214 0.821407C15.5088 1.13397 15.3333 1.55789 15.3333 1.99992V20.3333H13.6666C13.2246 20.3333 12.8006 20.5088 12.4881 20.8214C12.1755 21.134 11.9999 21.5579 11.9999 21.9999C11.9999 22.4419 12.1755 22.8659 12.4881 23.1784C12.8006 23.491 13.2246 23.6666 13.6666 23.6666H20.3333C20.7753 23.6666 21.1992 23.491 21.5118 23.1784C21.8243 22.8659 21.9999 22.4419 21.9999 21.9999C21.9999 21.5579 21.8243 21.134 21.5118 20.8214C21.1992 20.5088 20.7753 20.3333 20.3333 20.3333Z"
+                                fill={filters.isApplied ? "#FB7D0F" : "black"}
+                            />
+                        </svg>
+                        <Filter />
+                    </div>
+
+                    <svg
+                        width="24"
+                        className="cursor-pointer hidden md:block"
+                        onClick={() => setRowFilter((prev) => !prev)}
+                        viewBox="0 0 31 31"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            d="M12.4166 17.0416H1.62492C1.21604 17.0416 0.823914 17.204 0.534796 17.4931C0.245677 17.7822 0.083252 18.1744 0.083252 18.5833V29.3749C0.083252 29.7838 0.245677 30.1759 0.534796 30.465C0.823914 30.7542 1.21604 30.9166 1.62492 30.9166H12.4166C12.8255 30.9166 13.2176 30.7542 13.5067 30.465C13.7958 30.1759 13.9583 29.7838 13.9583 29.3749V18.5833C13.9583 18.1744 13.7958 17.7822 13.5067 17.4931C13.2176 17.204 12.8255 17.0416 12.4166 17.0416ZM10.8749 27.8333H3.16659V20.1249H10.8749V27.8333ZM29.3749 0.083252H18.5833C18.1744 0.083252 17.7822 0.245677 17.4931 0.534796C17.204 0.823914 17.0416 1.21604 17.0416 1.62492V12.4166C17.0416 12.8255 17.204 13.2176 17.4931 13.5067C17.7822 13.7958 18.1744 13.9583 18.5833 13.9583H29.3749C29.7838 13.9583 30.1759 13.7958 30.465 13.5067C30.7542 13.2176 30.9166 12.8255 30.9166 12.4166V1.62492C30.9166 1.21604 30.7542 0.823914 30.465 0.534796C30.1759 0.245677 29.7838 0.083252 29.3749 0.083252V0.083252ZM27.8333 10.8749H20.1249V3.16659H27.8333V10.8749ZM29.3749 17.0416H18.5833C18.1744 17.0416 17.7822 17.204 17.4931 17.4931C17.204 17.7822 17.0416 18.1744 17.0416 18.5833V29.3749C17.0416 29.7838 17.204 30.1759 17.4931 30.465C17.7822 30.7542 18.1744 30.9166 18.5833 30.9166H29.3749C29.7838 30.9166 30.1759 30.7542 30.465 30.465C30.7542 30.1759 30.9166 29.7838 30.9166 29.3749V18.5833C30.9166 18.1744 30.7542 17.7822 30.465 17.4931C30.1759 17.204 29.7838 17.0416 29.3749 17.0416ZM27.8333 27.8333H20.1249V20.1249H27.8333V27.8333ZM12.4166 0.083252H1.62492C1.21604 0.083252 0.823914 0.245677 0.534796 0.534796C0.245677 0.823914 0.083252 1.21604 0.083252 1.62492V12.4166C0.083252 12.8255 0.245677 13.2176 0.534796 13.5067C0.823914 13.7958 1.21604 13.9583 1.62492 13.9583H12.4166C12.8255 13.9583 13.2176 13.7958 13.5067 13.5067C13.7958 13.2176 13.9583 12.8255 13.9583 12.4166V1.62492C13.9583 1.21604 13.7958 0.823914 13.5067 0.534796C13.2176 0.245677 12.8255 0.083252 12.4166 0.083252V0.083252ZM10.8749 10.8749H3.16659V3.16659H10.8749V10.8749Z"
+                            fill={rowFilter ? "#000" : "#FB7D0F"}
+                        />
+                    </svg>
+                </div>
+            </div>
+            <div
+                className={`grid ${
+                    rowFilter
+                        ? "grid-cols-1"
+                        : "grid-cols-2 sm:grid-cols-2 lg:grid-cols-4"
+                } gap-4 mt-2 lg:mt-4 mx-auto p-3 relative`}
+            >
+                {loading ? (
+                    <Skeleton count={4} />
+                ) : products.length > 0 ? (
+                    products.map((prod) => {
+                        return (
+                            <Product
+                                rowFilter={rowFilter}
+                                key={prod.id}
+                                link={`/product/${prod.id}`}
+                                title={prod.attributes.title}
+                                stockLeft={prod.attributes.stockLeft}
+                                price={prod.attributes.price}
+                                img={prod.attributes.image.data.attributes.url}
+                                ratings={prod.attributes.ratings}
+                                description={prod.attributes.description}
+                            />
+                        );
+                    })
+                ) : (
+                    <div className="flex flex-col h-full justify-center w-full items-center">
+                        <h1 className="text-center font-bold absolute left-1/3 top-8 text-gray-400 text-2xl">
+                            No Products found
+                        </h1>
+                    </div>
+                )}
+            </div>
         </div>
-    )
-}
+    );
+};
 
 export default Products;

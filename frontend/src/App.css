@@ -3,7 +3,7 @@ svg.star-svg {
 }
 
 .product-cart-icon {
-    fill:rgb(49, 49, 49);
+    fill: rgb(49, 49, 49);
 }
 
 .nav-cart-info {
@@ -11,88 +11,40 @@ svg.star-svg {
 }
 
 .filter-modal {
-    background-color: rgb(255, 255, 255); 
-    width:300px;
-    height:400px;
-    position:absolute;
-    top:60px;
-    right:0px;
+    background-color: rgb(255, 255, 255);
+    width: 300px;
+    height: 400px;
+    position: absolute;
+    top: 60px;
+    right: 0px;
     z-index: 10;
-    filter: drop-shadow(2px -1px 21px -3px rgba(184,184,184,1));
-    box-shadow: 2px -1px 15px -5px rgba(184,184,184,1);
+    filter: drop-shadow(2px -1px 21px -3px rgba(184, 184, 184, 1));
+    box-shadow: 2px -1px 15px -5px rgba(184, 184, 184, 1);
 }
 
-.filter-modal-after{
-    position: absolute; 
+.filter-modal-after {
+    position: absolute;
     top: -16px;
     left: 155px;
     background-color: #ffffff;
-    width:40px;
-    height:25px;
+    width: 40px;
+    height: 25px;
     clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-    box-shadow: 2px -1px 15px -5px rgba(184,184,184,1);
+    box-shadow: 2px -1px 15px -5px rgba(184, 184, 184, 1);
 }
 
-/* .triangle {
-    width: 50px;
-    height: 80px;
-    clip-path: polygon(48% 73%, 0% 100%, 100% 100%);
-    background-color: #333;
- } */
+/* Hide the default checkbox */
+/* .custom-checkbox {
+    @apply appearance-none inline-block w-5 h-5 rounded relative border border-gray-300 cursor-pointer;
+}
 
- [data-tooltip] {
-    position: relative;
-    cursor: pointer;
-  }
-  [data-tooltip]:before,
-  [data-tooltip]:after {
-    line-height: 1;
-    font-size: .9em;
-    pointer-events: none;
-    position: absolute;
-    display: none;
-    opacity: 0;
-  }
-  [data-tooltip]:before {
+.custom-checkbox:checked {
+    @apply accent-primary;
+}
+
+.custom-checkbox:checked::after {
     content: "";
-    border: 5px solid transparent;
-    z-index: 100;
-  }
-  [data-tooltip]:after {
-    content: attr(data-tooltip);
-    text-align: center;
-    min-width: 3em;
-    max-width: 21em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    padding: 15px 12px;
-    border-radius: 3px;
-    background: #4621FF;
-    color: #FFFFFF;
-    z-index: 99;
-  }
-  [data-tooltip]:hover:before,
-  [data-tooltip]:hover:after {
-    display: block;
-    opacity: 1;
-  }
-  
-  [data-tooltip][data-flow="bottom"]::before {
-    top: 100%;
-    border-top-width: 0;
-    border-bottom-color: #4621FF;
-  }
-  [data-tooltip][data-flow="bottom"]::after {
-    top: calc(100% + 5px);
-  }
-  [data-tooltip][data-flow="bottom"]::before, [data-tooltip][data-flow="bottom"]::after {
-    left: 40%;
-    -webkit-transform: translate(-50%, 8px);
-            transform: translate(-50%, 8px);
-  }
-
-  [data-tooltip=""]::after, [data-tooltip=""]::before {
-    display: none !important;
-  }
-  
+    @apply absolute w-2 h-3 border-white border-solid border-t-0 border-l-0 transform rotate-45;
+    top: 1px;
+    left: 6px;
+} */
