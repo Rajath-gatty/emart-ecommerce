@@ -104,7 +104,7 @@ const StepperSlider = ({ min, max, step, onChange }) => {
                     }}
                 />
                 <div
-                    className="absolute top-[-6px] w-[20px] h-[20px] bg-white border-2 rounded-full border-primary cursor-pointer shadow-sm"
+                    className="absolute top-[-9px] w-[25px] h-[25px] bg-white border-2 rounded-full border-primary cursor-pointer shadow-sm"
                     style={{
                         left: `${((value[0] - min) / (max - min)) * 100}%`,
                     }}
@@ -112,7 +112,7 @@ const StepperSlider = ({ min, max, step, onChange }) => {
                     onTouchStart={handleChangeStart(0)}
                 />
                 <div
-                    className="absolute top-[-6px] w-[20px] h-[20px] bg-white border-2 rounded-full border-primary cursor-pointer shadow-sm"
+                    className="absolute top-[-9px] w-[25px] h-[25px] bg-white border-2 rounded-full border-primary cursor-pointer shadow-sm"
                     style={{
                         left: `${((value[1] - min) / (max - min)) * 100}%`,
                     }}

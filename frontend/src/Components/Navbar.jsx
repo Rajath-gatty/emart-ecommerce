@@ -22,14 +22,17 @@ const Navbar = ({ search = true }) => {
     const isAuth = useSelector((state) => state.user.isAuth);
     const username = useSelector((state) => state.user.info.username);
     const filters = useSelector((state) => state.product.filters);
+    const pageLimit = useSelector((state) => state.product.limit);
 
     useEffect(() => {
         const fetchProducts = () => {
             const q = query;
             if (q.length > 0) {
-                dispatch(fetchProductsBySearch({ query: q.trim() }));
+                dispatch(
+                    fetchProductsBySearch({ query: q.trim(), limit: pageLimit })
+                );
             } else {
-                dispatch(fetchAllProducts({ filters }));
+                dispatch(fetchAllProducts({ filters, limit: pageLimit }));
             }
         };
         if (isMounted.current) {

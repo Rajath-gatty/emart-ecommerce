@@ -15,7 +15,6 @@ import Order from "./Pages/Order";
 
 function App() {
     const dispatch = useDispatch();
-    const isAuth = useSelector((state) => state.user.isAuth);
     let token = useSelector((state) => state.user.token);
 
     useLayoutEffect(() => {
@@ -44,10 +43,7 @@ function App() {
                     <Route path="/cart" element={<Cart />} />
                 </Routes>
                 <Routes>
-                    <Route
-                        path="/orders"
-                        element={isAuth ? <Order /> : <Navigate to="/login" />}
-                    />
+                    <Route path="/orders" element={<Order />} />
                 </Routes>
                 <Routes>
                     <Route path="/order/status" element={<PaymentStatus />} />

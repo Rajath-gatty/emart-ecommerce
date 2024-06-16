@@ -41,6 +41,7 @@ export const Filter = () => {
                 priceRange: newValue,
             })
         );
+        dispatch(productReducer.incrementByPage(1));
     };
 
     const handleFormChange = (e) => {
@@ -61,6 +62,7 @@ export const Filter = () => {
                 category: filteredCategory,
             })
         );
+        dispatch(productReducer.incrementByPage(1));
     };
 
     const handleClearFilters = () => {

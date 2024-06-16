@@ -87,18 +87,15 @@ const ProductDetails = () => {
             {loading ? (
                 <div className="text-center mt-16">Loading....</div>
             ) : (
-                <div className="max-w-7xl mx-4 md:mx-auto mt-4 ">
+                <div className="max-w-7xl mx-4 text-xs md:text-md md:mx-auto mt-4 ">
                     <div>
                         <Link className="text-primary mr-2 font-open" to="/">
                             Home
                         </Link>{" "}
                         &gt;
-                        <Link
-                            className="text-primary mr-2 ml-2 font-open"
-                            to={`/?category=${category}`}
-                        >
+                        <span className="mr-2 ml-2 font-open">
                             {category}
-                        </Link>{" "}
+                        </span>{" "}
                         &gt;
                         <span className="ml-2 font-open">
                             {title.substring(0, 50)}...

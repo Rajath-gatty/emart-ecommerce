@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../Components/Navbar";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Order = () => {
     const [orders, setOrders] = useState([]);
     const [loading, isLoading] = useState(true);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -20,7 +22,11 @@ const Order = () => {
                 isLoading(false);
             }
         };
-        fetchOrders();
+        if (JSON.parse(localStorage.getItem("token"))) {
+            fetchOrders();
+        } else {
+            navigate("/");
+        }
     }, []);
     return (
         <div>

@@ -9,6 +9,7 @@ export const fetchProducts = createAsyncThunk(
             isApplied,
         },
         limit = 12,
+        page = 1,
     }) => {
         let url;
         if (isApplied) {
@@ -18,31 +19,31 @@ export const fetchProducts = createAsyncThunk(
                     .join("&");
                 url = `${
                     import.meta.env.VITE_BASE_URL
-                }/api/products?${categoryStr}&filters[price][$gt]=${
+                }/api/products?sort[0]=createdAt:desc&${categoryStr}&filters[price][$gt]=${
                     priceRange[0]
                 }&filters[price][$lt]=${
                     priceRange[1]
-                }&pagination[limit]=${limit}&populate=image`;
+                }&pagination[pageSize]=${limit}&pagination[page]=${page}&populate=image`;
             } else if (category.length > 0) {
                 const categoryStr = category
                     .map((c, i) => `filters[category][$in][${i}]=${c}`)
                     .join("&");
                 url = `${
                     import.meta.env.VITE_BASE_URL
-                }/api/products?${categoryStr}&pagination[limit]=${limit}&populate=image`;
+                }/api/products?sort[0]=createdAt:desc&${categoryStr}&pagination[pageSize]=${limit}&pagination[page]=${page}&populate=image`;
             } else if (priceRange.length > 0) {
                 url = `${
                     import.meta.env.VITE_BASE_URL
-                }/api/products?filters[price][$gt]=${
+                }/api/products?sort[0]=createdAt:desc&filters[price][$gt]=${
                     priceRange[0]
                 }&filters[price][$lt]=${
                     priceRange[1]
-                }&pagination[limit]=${limit}&populate=image`;
+                }&pagination[pageSize]=${limit}&pagination[page]=${page}&populate=image`;
             }
         } else {
             url = `${
                 import.meta.env.VITE_BASE_URL
-            }/api/products?pagination[limit]=${limit}&populate=image`;
+            }/api/products?sort[0]=createdAt:desc&pagination[pageSize]=${limit}&pagination[page]=${page}&populate=image`;
         }
         const response = await axios.get(url);
         return response.data;
@@ -78,6 +79,9 @@ const product = createSlice({
             loading: true,
             error: false,
             data: [],
+            totalCount: 0,
+            limit: 8,
+            curPage: 1,
         },
         filters: {
             isApplied: false,
@@ -224,6 +228,16 @@ const product = createSlice({
                 })
             );
         },
+        incrementPage(state) {
+            state.product.curPage = state.product.curPage + 1;
+        },
+        decrementPage(state) {
+            if (state.product.curPage === 1) return;
+            state.product.curPage = state.product.curPage - 1;
+        },
+        incrementByPage(state, action) {
+            state.product.curPage = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchProducts.pending, (state, action) => {
@@ -232,6 +246,7 @@ const product = createSlice({
         builder.addCase(fetchProducts.fulfilled, (state, action) => {
             state.product.loading = false;
             state.product.data = action.payload.data;
+            state.product.totalCount = action.payload.meta.pagination.total;
         });
         builder.addCase(fetchProducts.rejected, (state, action) => {
             state.product.loading = false;
@@ -255,6 +270,8 @@ const product = createSlice({
                 fetchProductsBySearch.fulfilled,
                 (state, action) => {
                     state.product.data = action.payload.data;
+                    state.product.totalCount =
+                        action.payload.meta.pagination.total;
                     state.product.loading = false;
                 }
             ),
