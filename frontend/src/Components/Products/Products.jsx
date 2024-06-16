@@ -5,7 +5,7 @@ import { fetchProducts } from "../../store/ProductsSlice";
 import Skeleton from "../UI/Skeleton/Skeleton";
 import { Filter } from "../UI/Filter";
 import Pagination from "../UI/Pagination";
-import SquaresIcon from "../UI/Icons/squares";
+import SquaresIcon from "../UI/Icons/Squares";
 import FilterIcon from "../UI/Icons/FilterIcon";
 
 const Products = () => {
