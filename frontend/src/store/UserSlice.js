@@ -13,15 +13,27 @@ export const googleAuthData = createAsyncThunk(
     }
 );
 
+const loadInitialState = () => {
+    try {
+        const user = JSON.parse(localStorage.getItem("user"));
+        const token = JSON.parse(localStorage.getItem("token"));
+        return {
+            token: token || "",
+            info: user || {},
+            isAuth: !!token,
+            isLoading: false,
+            error: false,
+        };
+    } catch (err) {
+        console.log("Could not load data from local storage", err);
+    }
+};
+
+const initialState = loadInitialState();
+
 const user = createSlice({
     name: "user",
-    initialState: {
-        token: "",
-        info: {},
-        isAuth: false,
-        isLoading: false,
-        error: false,
-    },
+    initialState,
     reducers: {
         loadUserInfo(state, action) {
             state.info = action.payload.info;

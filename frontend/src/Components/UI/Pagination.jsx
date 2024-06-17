@@ -11,16 +11,34 @@ const Pagination = () => {
 
     const dispatch = useDispatch();
 
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
+    };
+
+    const handleNextPage = () => {
+        dispatch(productReducer.incrementPage());
+        scrollToTop();
+    };
+    const handlePrevPage = () => {
+        dispatch(productReducer.decrementPage());
+        scrollToTop();
+    };
+    const handlePage = (page) => {
+        dispatch(productReducer.incrementByPage(page));
+        scrollToTop();
+    };
+
     return (
         <div className="flex justify-center mb-12 mt-6 mx-auto ">
             {Math.ceil(totalProductCount / pageLimit) === 1 || (
-                <div className="flex items-center border border-slate-300 p-2">
+                <div className="flex items-center">
                     {curPage === 1 || (
                         <button
                             className="text-md flex font-bold gap-1 text-slate-600 p-2 px-4 items-center"
-                            onClick={() =>
-                                dispatch(productReducer.decrementPage())
-                            }
+                            onClick={handlePrevPage}
                         >
                             <span>
                                 <svg
@@ -45,11 +63,7 @@ const Pagination = () => {
                         .map((p, i) => (
                             <button
                                 key={i + 1}
-                                onClick={() =>
-                                    dispatch(
-                                        productReducer.incrementByPage(i + 1)
-                                    )
-                                }
+                                onClick={() => handlePage(i + 1)}
                                 className={` text-md font-bold p-2 px-4 ${
                                     curPage === i + 1
                                         ? "text-primary  bg-primary/20"
@@ -62,9 +76,7 @@ const Pagination = () => {
                     {Math.ceil(totalProductCount / pageLimit) === curPage || (
                         <button
                             className="text-md flex gap-1 items-center justify-center font-bold text-slate-600  p-2 px-4"
-                            onClick={() =>
-                                dispatch(productReducer.incrementPage())
-                            }
+                            onClick={handleNextPage}
                         >
                             <span>Next</span>
                             <span>

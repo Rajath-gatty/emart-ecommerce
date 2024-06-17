@@ -5,27 +5,17 @@ import ProductDetails from "./Components/Products/ProductDetails";
 import Cart from "./Pages/Cart";
 import GoogleAuthCallback from "./Pages/GoogleAuthCallback";
 import Login from "./Pages/Login";
-import { useDispatch, useSelector } from "react-redux";
-import { userReducer } from "./store/UserSlice";
-import { productReducer } from "./store/ProductsSlice";
+import { useSelector } from "react-redux";
 import axios from "axios";
 import { useLayoutEffect } from "react";
 import { PaymentStatus } from "./Pages/PaymentStatus";
 import Order from "./Pages/Order";
 
 function App() {
-    const dispatch = useDispatch();
-    let token = useSelector((state) => state.user.token);
+    const token = useSelector((state) => state.user.token);
 
     useLayoutEffect(() => {
-        token = JSON.parse(localStorage.getItem("token"));
-        const cartItems = JSON.parse(localStorage.getItem("cart"));
-        if (cartItems) {
-            dispatch(productReducer.loadItemsToCart(cartItems));
-        }
         if (token) {
-            const userInfo = JSON.parse(localStorage.getItem("user"));
-            dispatch(userReducer.loadUserInfo({ token, info: userInfo }));
             axios.defaults.headers["Authorization"] = `Bearer ${token}`;
         }
     }, [token]);
@@ -43,13 +33,21 @@ function App() {
                     <Route path="/cart" element={<Cart />} />
                 </Routes>
                 <Routes>
-                    <Route path="/orders" element={<Order />} />
+                    <Route
+                        path="/orders"
+                        element={
+                            token ? <Order /> : <Navigate to="/login" replace />
+                        }
+                    />
                 </Routes>
                 <Routes>
                     <Route path="/order/status" element={<PaymentStatus />} />
                 </Routes>
                 <Routes>
-                    <Route path="/login" element={<Login />} />
+                    <Route
+                        path="/login"
+                        element={token ? <Navigate to="/" /> : <Login />}
+                    />
                 </Routes>
                 <Routes>
                     <Route

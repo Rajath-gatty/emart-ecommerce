@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useRef, useCallback } from "react";
 import { useSelector } from "react-redux";
 
 const debounce = (func, wait) => {
@@ -12,7 +12,6 @@ const debounce = (func, wait) => {
 };
 
 const StepperSlider = ({ min, max, step, onChange }) => {
-    const [value, setValue] = useState([min, max]);
     const sliderRef = useRef(null);
 
     const debouncedOnChange = useCallback(debounce(onChange, 100), []);
@@ -20,20 +19,15 @@ const StepperSlider = ({ min, max, step, onChange }) => {
         (state) => state.product.filters.filter.priceRange
     );
 
-    useEffect(() => {
-        setValue(priceRange);
-    }, [priceRange[0], priceRange[1]]);
-
     const handleSliderChange = (index, newValue) => {
-        const newValues = [...value];
-        // Ensure the new value does not cross the other thumb
+        const newValues = [...priceRange];
+        // Ensure the new priceRange does not cross the other thumb
         if (index === 0) {
-            newValues[0] = Math.min(newValue, value[1] - step);
+            newValues[0] = Math.min(newValue, priceRange[1] - step);
         } else {
-            newValues[1] = Math.max(newValue, value[0] + step);
+            newValues[1] = Math.max(newValue, priceRange[0] + step);
         }
         debouncedOnChange(newValues);
-        setValue(newValues);
     };
 
     const handleChangeStart = (index) => (event) => {
@@ -74,7 +68,7 @@ const StepperSlider = ({ min, max, step, onChange }) => {
                         style: "currency",
                         currency: "INR",
                         minimumFractionDigits: 0,
-                    }).format(Number(value[0]))}
+                    }).format(Number(priceRange[0]))}
                 </span>
                 <span> - </span>
                 <span>
@@ -82,7 +76,7 @@ const StepperSlider = ({ min, max, step, onChange }) => {
                         style: "currency",
                         currency: "INR",
                         minimumFractionDigits: 0,
-                    }).format(Number(value[1]))}
+                    }).format(Number(priceRange[1]))}
                 </span>
             </div>
             <div
@@ -97,16 +91,16 @@ const StepperSlider = ({ min, max, step, onChange }) => {
                 <div
                     className="absolute h-full rounded-md bg-primary"
                     style={{
-                        left: `${((value[0] - min) / (max - min)) * 100}%`,
+                        left: `${((priceRange[0] - min) / (max - min)) * 100}%`,
                         right: `${
-                            100 - ((value[1] - min) / (max - min)) * 100
+                            100 - ((priceRange[1] - min) / (max - min)) * 100
                         }%`,
                     }}
                 />
                 <div
                     className="absolute top-[-9px] w-[25px] h-[25px] bg-white border-2 rounded-full border-primary cursor-pointer shadow-sm"
                     style={{
-                        left: `${((value[0] - min) / (max - min)) * 100}%`,
+                        left: `${((priceRange[0] - min) / (max - min)) * 100}%`,
                     }}
                     onMouseDown={handleChangeStart(0)}
                     onTouchStart={handleChangeStart(0)}
@@ -114,7 +108,7 @@ const StepperSlider = ({ min, max, step, onChange }) => {
                 <div
                     className="absolute top-[-9px] w-[25px] h-[25px] bg-white border-2 rounded-full border-primary cursor-pointer shadow-sm"
                     style={{
-                        left: `${((value[1] - min) / (max - min)) * 100}%`,
+                        left: `${((priceRange[1] - min) / (max - min)) * 100}%`,
                     }}
                     onMouseDown={handleChangeStart(1)}
                     onTouchStart={handleChangeStart(1)}

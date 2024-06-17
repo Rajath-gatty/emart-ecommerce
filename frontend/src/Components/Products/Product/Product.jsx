@@ -12,7 +12,7 @@ const Product = ({
     description,
 }) => {
     return (
-        <Link to={link} replace>
+        <Link to={link}>
             <div
                 className={`bg-light-grey border ${
                     rowFilter ? "flex gap-24 items-center" : ""

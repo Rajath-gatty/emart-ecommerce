@@ -44,8 +44,8 @@ const Navbar = ({ search = true }) => {
 
     return (
         <div className="grid grid-cols-3 p-4 pt-6 md:pt-4 w-full md:max-w-7xl md:mx-auto">
-            <Link to="/">
-                <img className="w-20 md:w-28" src={Logo} alt="Logo" />
+            <Link className="w-20 md:w-28" to="/">
+                <img className="w-full" src={Logo} alt="Logo" />
             </Link>
             {search && <Search searchQuery={setQuery} />}
             <div className="flex items-center xs:mb-4 lg:mb-0 md:gap-12 gap-8 col-start-3 col-end-4 justify-self-end relative">
@@ -60,7 +60,7 @@ const Navbar = ({ search = true }) => {
                     </Link>
                 </div>
                 {isAuth ? (
-                    <div className="flex md:gap-4 gap-2 relative group cursor-pointer">
+                    <button className="flex md:gap-4 gap-2 relative group cursor-pointer">
                         <h1 className="font-medium text-lg">{username}</h1>
                         <img
                             className="mr-6 md:mr-0 w-7"
@@ -86,7 +86,7 @@ const Navbar = ({ search = true }) => {
                                 </p>
                             </div>
                         </div>
-                    </div>
+                    </button>
                 ) : (
                     <Link to="/login">
                         <button className="px-6 py-2 rounded-full bg-primary text-white text-sm">

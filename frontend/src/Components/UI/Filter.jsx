@@ -15,9 +15,9 @@ export const Filter = () => {
         SmartPhone: false,
     });
 
-    useEffect(() => {
-        dispatch(productReducer.fetchFilters());
-    }, []);
+    // useEffect(() => {
+    //     dispatch(productReducer.fetchFilters());
+    // }, []);
 
     useEffect(() => {
         if (filters.category.length === 0) return;
@@ -77,7 +77,7 @@ export const Filter = () => {
     };
 
     return (
-        <div className="absolute top-6 -right-4 md:-right-14  pt-3 z-10 transition-all duration-100 transform scale-75 opacity-0 group-hover:visible invisible group-hover:opacity-100 group-hover:scale-100 origin-top">
+        <div className="absolute top-6 -right-4 md:-right-14  pt-3 z-10 transition-all duration-100 transform  group-hover:visible invisible opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 origin-top">
             <div className="bg-white shadow-lg border-2 border-slate-100 rounded-md p-4 md:w-[400px] w-[350px] min-w-[100px]">
                 <div className="flex justify-between items-center">
                     <h2 className="uppercase text-lg font-medium text-slate-800">

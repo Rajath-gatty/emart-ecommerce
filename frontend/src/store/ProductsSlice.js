@@ -72,35 +72,49 @@ export const fetchProductsBySearch = createAsyncThunk(
     }
 );
 
+const loadInitialState = () => {
+    try {
+        const filters = JSON.parse(localStorage.getItem("filters"));
+        const cart = JSON.parse(localStorage.getItem("cart"));
+        return {
+            product: {
+                loading: true,
+                error: false,
+                data: [],
+                totalCount: 0,
+                limit: 8,
+                curPage: 1,
+            },
+            filters: {
+                isApplied: filters ? filters.isApplied : false,
+                filter: {
+                    category: filters ? filters.filter.category : [],
+                    priceRange: filters
+                        ? filters.filter.priceRange
+                        : [1000, 100000],
+                },
+            },
+            singleProduct: {
+                loading: true,
+                error: false,
+                data: {},
+            },
+            cart: {
+                items: cart ? cart.items : [],
+                itemCount: cart ? cart.itemCount : 0,
+                totalPrice: cart ? cart.totalPrice : 0,
+            },
+        };
+    } catch (err) {
+        console.log("Could not load data from local storage", err);
+    }
+};
+
+const initialState = loadInitialState();
+
 const product = createSlice({
     name: "product",
-    initialState: {
-        product: {
-            loading: true,
-            error: false,
-            data: [],
-            totalCount: 0,
-            limit: 8,
-            curPage: 1,
-        },
-        filters: {
-            isApplied: false,
-            filter: {
-                category: [],
-                priceRange: [1000, 100000],
-            },
-        },
-        singleProduct: {
-            loading: true,
-            error: false,
-            data: {},
-        },
-        cart: {
-            items: [],
-            itemCount: 0,
-            totalPrice: 0,
-        },
-    },
+    initialState,
     reducers: {
         addtoCart(state, action) {
             let item = {};

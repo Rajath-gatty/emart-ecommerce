@@ -22,19 +22,7 @@ const Products = () => {
     const curPage = useSelector((state) => state.product.product.curPage);
 
     useEffect(() => {
-        if (!JSON.parse(localStorage.getItem("filters"))?.isApplied) {
-            dispatch(fetchProducts({ filters, limit: 12 }));
-        }
-    }, []);
-
-    useEffect(() => {
-        if (fetchProductsRef.current) {
-            dispatch(
-                fetchProducts({ filters, limit: pageLimit, page: curPage })
-            );
-        } else {
-            fetchProductsRef.current = true;
-        }
+        dispatch(fetchProducts({ filters, limit: pageLimit, page: curPage }));
     }, [filters, curPage]);
 
     return (
