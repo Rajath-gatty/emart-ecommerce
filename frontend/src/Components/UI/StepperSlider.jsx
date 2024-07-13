@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from "react";
+import React, { useRef, useCallback, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
 const debounce = (func, wait) => {
@@ -13,11 +13,17 @@ const debounce = (func, wait) => {
 
 const StepperSlider = ({ min, max, step, onChange }) => {
     const sliderRef = useRef(null);
+    const [priceRangeUi,setPriceRangeUi] = useState([min,max]);
 
     const debouncedOnChange = useCallback(debounce(onChange, 100), []);
     const priceRange = useSelector(
         (state) => state.product.filters.filter.priceRange
     );
+
+    useEffect(() => {
+        setPriceRangeUi(priceRange);
+    },[priceRange])
+
 
     const handleSliderChange = (index, newValue) => {
         const newValues = [...priceRange];
@@ -27,6 +33,7 @@ const StepperSlider = ({ min, max, step, onChange }) => {
         } else {
             newValues[1] = Math.max(newValue, priceRange[0] + step);
         }
+        setPriceRangeUi(newValues)
         debouncedOnChange(newValues);
     };
 
@@ -68,7 +75,7 @@ const StepperSlider = ({ min, max, step, onChange }) => {
                         style: "currency",
                         currency: "INR",
                         minimumFractionDigits: 0,
-                    }).format(Number(priceRange[0]))}
+                    }).format(Number(priceRangeUi[0]))}
                 </span>
                 <span> - </span>
                 <span>
@@ -76,7 +83,7 @@ const StepperSlider = ({ min, max, step, onChange }) => {
                         style: "currency",
                         currency: "INR",
                         minimumFractionDigits: 0,
-                    }).format(Number(priceRange[1]))}
+                    }).format(Number(priceRangeUi[1]))}
                 </span>
             </div>
             <div
@@ -91,16 +98,16 @@ const StepperSlider = ({ min, max, step, onChange }) => {
                 <div
                     className="absolute h-full rounded-md bg-primary"
                     style={{
-                        left: `${((priceRange[0] - min) / (max - min)) * 100}%`,
+                        left: `${((priceRangeUi[0] - min) / (max - min)) * 100}%`,
                         right: `${
-                            100 - ((priceRange[1] - min) / (max - min)) * 100
+                            100 - ((priceRangeUi[1] - min) / (max - min)) * 100
                         }%`,
                     }}
                 />
                 <div
                     className="absolute top-[-9px] w-[25px] h-[25px] bg-white border-2 rounded-full border-primary cursor-pointer shadow-sm"
                     style={{
-                        left: `${((priceRange[0] - min) / (max - min)) * 100}%`,
+                        left: `${((priceRangeUi[0] - min) / (max - min)) * 100}%`,
                     }}
                     onMouseDown={handleChangeStart(0)}
                     onTouchStart={handleChangeStart(0)}
@@ -108,7 +115,7 @@ const StepperSlider = ({ min, max, step, onChange }) => {
                 <div
                     className="absolute top-[-9px] w-[25px] h-[25px] bg-white border-2 rounded-full border-primary cursor-pointer shadow-sm"
                     style={{
-                        left: `${((priceRange[1] - min) / (max - min)) * 100}%`,
+                        left: `${((priceRangeUi[1] - min) / (max - min)) * 100}%`,
                     }}
                     onMouseDown={handleChangeStart(1)}
                     onTouchStart={handleChangeStart(1)}
